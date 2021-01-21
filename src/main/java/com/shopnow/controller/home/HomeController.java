@@ -28,8 +28,6 @@ public class HomeController {
 
     @GetMapping
     public ModelAndView index() throws URISyntaxException {
-        System.out.println("duong dan file: " + new File(HomeController.class.getProtectionDomain().getCodeSource().getLocation()
-                .toURI()).getPath());
         WebInfo webInfo=webInfoService.findById(1L);
         ModelAndView modelAndView = new ModelAndView("fe/home/index","webInfo", webInfo);
         modelAndView.addObject("provinces", provinceService.findAll());
