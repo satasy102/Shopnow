@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="">
+
+<head th:replace="admin/layout :: header">
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <!-- left_nav -->
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+                <th:block th:replace="admin/layout :: nav-title">
+                </th:block>
+                <!-- sidebar menu -->
+                <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                    <div class="menu_section" th:replace="admin/layout :: user">
+                    </div>
+                </div>
+                <!-- /menu footer buttons -->
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav" th:replace="admin/layout :: top_nav">
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 ">
+                    <div class="x_content">
+                        <button type="button" class="btn-sm btn-success mb-3" onclick="orders.openModalSelectSupplier()">
+                            Tạo đơn đặt hàng mới
+                        </button>
+                        <div class="table-responsive">
+                            <table id="datatables" class="table table-striped jambo_table bulk_action">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <footer th:replace="admin/layout :: footer">
+        </footer>
+        <!-- /footer content -->
+    </div>
+</div>
+
+<!--Modal-->
+<div class="modal" id="modalAddEditOrder">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modalAddEditOrder-title"></h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="orders.resetFormAddOrderDetail()" aria-label="Close">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form  id="formAddOrderDetail" th:name="formAddOrderDetail">
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <label style="font-size: larger; margin-bottom: 0">Tên sản phẩm</label>
+                        </div>
+                        <div class="col-2">
+                            <label style="font-size: larger; margin-bottom: 0">Đơn giá</label>
+                        </div>
+                        <div class="col-2">
+                            <label style="font-size: larger; margin-bottom: 0">Số lượng</label>
+                        </div>
+                        <div class="col-2">
+                            <label style="font-size: larger; margin-bottom: 0">Thành tiền</label>
+                        </div>
+                        <div class="col-3">
+                            <label style="font-size: larger; margin-bottom: 0">Ghi chú</label>
+                        </div>
+                    </div>
+                    <div class="row form-group mt-1">
+                        <div class="col-3">
+                            <select class="form-control" id="product" name="product">
+                            </select>
+                            <p style="color: red;display: none" class="ui-state-error-text"></p>
+                        </div>
+                        <div class="col-2">
+                            <input type="number" id="prime_cost" name="quantity" class="form-control" required>
+                            <p style="color: red;display: none" class="ui-state-error-text"></p>
+                        </div>
+                        <div class="col-2">
+                            <input type="number" id="order_quantity" name="quantity" class="form-control" required>
+                            <p style="color: red;display: none" class="ui-state-error-text"></p>
+                        </div>
+                        <div class="col-2">
+                            <input type="number" id="amount" name="amount" class="form-control" required>
+                            <p style="color: red;display: none" class="ui-state-error-text"></p>
+                        </div>
+                        <div class="col-3">
+                            <textarea id="remark" name="remark" class="form-control" style="height: 2.375rem"></textarea>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-12" style="text-align: right">
+                            <a class="btn btn-outline-success ml-2" onclick="orders.addNewOrderDetail()" style="font-size: medium">
+                                <i class="far fa-check" title="Thêm"></i> Thêm sản phẩm
+                            </a>
+                        </div>
+                    </div>
+                </form>
+                <div class="row form-group">
+                    <div class="col-12" style="text-align: left">
+                        <h3 class="mb-0" style="margin-top: 30px">Danh sách sản phẩm</h3>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="table-responsive">
+                        <table class="table table-striped jambo_table bulk_action" id="orderTable">
+                            <thead>
+                            <tr class="headings" style="background-color: #26B99A">
+                                <th class="column-title">Sản phẩm</th>
+                                <th class="column-title">Đơn giá</th>
+                                <th class="column-title">Số lượng</th>
+                                <th class="column-title">Thành tiền</th>
+                                <th class="column-title">Ghi chú</th>
+                                <th class="column-title no-link last"><span class="nobr">Thao tác</span></th>
+                            </tr>
+                            </thead>
+                            <tbody id="orderDetail" >
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                    <!-- Modal footer -->
+                <form id="formAddEditOrder" th:name="formAddEditOrder">
+                    <input type="hidden" name="id" id="id" class="form-control" required>
+                    <input type="hidden" name="supplier_id" id="supplier_id" class="form-control" required>
+                    <div class="modal-footer">
+                        <div class="col-12" style="text-align: right">
+                            <a class="btn btn-success" id="button_name" onclick="orders.save()">Tạo đơn hàng</a>
+                            <a class="btn btn-warning" onclick="orders.resetFormAddEditOrder()" data-dismiss="modal" aria-label="Close">Huỷ</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal-->
+<div class="modal" id="modalUpdateOrderDetail">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Cập nhật thông tin sản phẩm</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="" aria-label="Close">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form  id="formUpdateOrderDetail" th:name="formUpdateOrderDetail">
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <label style="font-size: larger; margin-bottom: 0">Tên sản phẩm</label>
+                        </div>
+                        <div class="col-2">
+                            <label style="font-size: larger; margin-bottom: 0">Đơn giá</label>
+                        </div>
+                        <div class="col-2">
+                            <label style="font-size: larger; margin-bottom: 0">Số lượng</label>
+                        </div>
+                        <div class="col-2">
+                            <label style="font-size: larger; margin-bottom: 0">Thành tiền</label>
+                        </div>
+                        <div class="col-3">
+                            <label style="font-size: larger; margin-bottom: 0">Ghi chú</label>
+                        </div>
+                    </div>
+                    <div class="row form-group mt-1">
+                        <div class="col-3">
+                            <select class="form-control" id="new_product" name="new_product">
+                            </select>
+                            <p style="color: red;display: none" class="ui-state-error-text"></p>
+                        </div>
+                        <div class="col-2">
+                            <input type="number" id="new_prime_cost" name="new_prime_cost" class="form-control" required>
+                            <p style="color: red;display: none" class="ui-state-error-text"></p>
+                        </div>
+                        <div class="col-2">
+                            <input type="number" id="new_order_quantity" name="new_order_quantity" class="form-control" required>
+                            <p style="color: red;display: none" class="ui-state-error-text"></p>
+                        </div>
+                        <div class="col-2">
+                            <input type="number" id="new_amount" name="new_amount" class="form-control" required>
+                            <p style="color: red;display: none" class="ui-state-error-text"></p>
+                        </div>
+                        <div class="col-3">
+                            <textarea id="new_remark" name="new_remark" class="form-control" style="height: 2.375rem"></textarea>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-12" style="text-align: right">
+                            <input type="hidden" id="index" name="index">
+                            <a class="btn btn-outline-success ml-2" onclick="orders.updateOrderDetail()" style="font-size: medium">
+                                <i class="far fa-check" title="Cập nhật"></i> Cập nhật thông tin
+                            </a>
+                            <a class="btn btn-outline-warning ml-2" onclick="" data-dismiss="modal" style="font-size: medium">
+                                <i class="far fa-check" title="Huỷ"></i> Huỷ cập nhật
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal products receipt-->
+<div class="modal" id="modalProductsReceipt">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modalProductsReceipt-title"></h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="" aria-label="Close">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="row form-group mb-0">
+                    <ul style="font-size: larger; color: #0b0b0b">
+                        <li class="order_id"></li>
+                        <li class="order_date"></li>
+                        <li class="supplier"></li>
+                    </ul>
+                </div>
+                <div class="row form-group mt-2">
+                    <div class="table-responsive">
+                        <table class="table table-striped jambo_table bulk_action" id="productsReceipt">
+                            <thead>
+                            <tr class="headings" style="background-color: #26B99A">
+                                <th class="column-title">Sản phẩm</th>
+                                <th class="column-title">Đơn giá</th>
+                                <th class="column-title">Số lượng</th>
+                                <th class="column-title">Ghi chú</th>
+                                <th class="column-title no-link last"><span class="nobr">Chọn</span></th>
+                            </tr>
+                            </thead>
+                            <tbody id="listProductsReceipt" >
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <div class="col-12" style="text-align: right">
+                        <a class="btn btn-success" onclick="orders.postProductsReceipt()">Nhập kho</a>
+                        <a class="btn btn-warning ml-2" onclick="" data-dismiss="modal" style="font-size: medium">Huỷ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal-->
+<div class="modal" id="modalSelectSupplier">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Chọn nhà cung cấp</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="orders.resetFormSelectSupplier()" aria-label="Close">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form  id="formSelectSupplier" th:name="formSelectSupplier">
+                    <div class="row form-group">
+                        <div class="col-4">
+                            <label style="font-size: larger">Nhà cung cấp</label>
+                        </div>
+                        <div class="col-8 form-label-group">
+                            <select class="form-control" id="supplier" name="supplier">
+                            </select>
+                            <p style="color: red;display: none" class="ui-state-error-text"></p>
+                        </div>
+                    </div>
+
+                <!-- Modal footer -->
+                    <div class="modal-footer" style="text-align: center">
+                        <a class="btn btn-success" onclick="orders.selectSupplier()">Tiếp tục</a>
+                        <a class="btn btn-warning" onclick="orders.resetFormSelectSupplier()" data-dismiss="modal" aria-label="Close">Huỷ</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Show Order Detail-->
+<div class="modal" id="modalShowOrderDetail">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modalAddEditOrder-title">Thông tin chi tiết đơn hàng</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="" aria-label="Close">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="row form-group">
+                    <ul style="font-size: larger; color: #0b0b0b">
+                        <li class="order_id"></li>
+                        <li class="order_amount"></li>
+                        <li class="order_date"></li>
+                    </ul>
+                </div>
+                <div class="row form-group">
+                    <div class="table-responsive">
+                        <table class="table table-striped jambo_table bulk_action" id="orderDetailTable">
+                            <thead>
+                            <tr class="headings" style="background-color: #26B99A">
+                                <th class="column-title">ID</th>
+                                <th class="column-title">Sản phẩm</th>
+                                <th class="column-title">Đơn giá</th>
+                                <th class="column-title">Số lượng</th>
+                                <th class="column-title">Trạng thái</th>
+                            </tr>
+                            </thead>
+                            <tbody id="orderDetailData" >
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <div class="col-12" style="text-align: right">
+                        <a class="btn btn-success" onclick="" data-dismiss="modal" aria-label="Close">Đóng</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="admin/layout :: block-script"></th:block>
+
+<th:block th:replace="admin/layout :: block-dataTable"></th:block>
+
+<script src="/admin/build/js/user/supplier.js"></script>
+<script src="/admin/build/js/user/product.js"></script>
+<script src="/admin/build/js/user/order_detail.js"></script>
+<script src="/admin/build/js/user/order.js"></script>
+
+<script>
+    $(document).ready(function () {
+        orders.init();
+    });
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="">
+
+<header th:replace="admin/layout::header">
+</header>
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <!-- left_nav -->
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+                <th:block th:insert="admin/layout::nav-title"></th:block>
+                <!-- sidebar menu -->
+                <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                    <div th:replace="admin/layout::admin"></div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="admin/layout::top_nav"></div>
+        <input type="hidden" id="idUser" th:value="${user.id}">
+        <div class="right_col" role="main">
+            <div class="text-right">
+                <a href="/admins/registers" class="btn btn-primary">Quay lại</a>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 ">
+                    <div class="x_content" style="background-color: #ffffff; color: #3c3c3c;">
+                        <div class="title-div mb-3">
+                            Thông tin cá nhân
+                        </div>
+                        <div>
+                            <div class="row" id="info-user">
+                                <div class="col-md-4 col-sm-12 text-center" style="height: 52vh;">
+                                    <img th:src="@{${user.user_avatar}}" alt="avatar" id="avatar-user"
+                                         style="max-width:100%; max-height:100%; object-fit:cover;">
+                                </div>
+
+                                <div class="col-md-8 col-sm-12">
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-12">
+                                            <h6>Tên nhân viên</h6>
+                                            <div class="info-detail" id="user_fullname-Update"
+                                                 th:text="${user.user_fullname}"></div>
+                                            <h6>Số điện thoại</h6>
+                                            <div class="info-detail" id="user_phone-Update"
+                                                 th:text="${user.user_phone}"></div>
+                                            <h6>Địa chỉ</h6>
+                                            <div class="info-detail" id="user_address-Update"
+                                                 th:text="${user.user_address}"></div>
+                                            <h6>Giới tính</h6>
+                                            <div class="info-detail" id="user_gender-Update"
+                                                 th:text="${user.user_gender}"></div>
+                                            <h6>Chức vụ</h6>
+                                            <div th:switch="${user.role}">
+                                                <div th:case="'ADMIN'" class="info-detail">Quản trị website</div>
+                                                <div th:case="'SHOP_OWNER'" class="info-detail">Chủ Cửa hàng</div>
+                                                <div th:case="'EMPLOYEE'" class="info-detail">Nhân viên cửa hàng</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12">
+                                            <h6>Email</h6>
+                                            <div class="info-detail" th:text="${user.email}"></div>
+                                            <h6>Tỉnh thành</h6>
+                                            <th:block th:switch="${user.province}">
+                                                <div th:case="null" id="province1" class="info-detail">Chưa có tỉnh
+                                                    thành
+                                                </div>
+                                                <div th:case="*" id="province2" class="info-detail"
+                                                     th:text="${user.province.name}"></div>
+                                            </th:block>
+                                            <div id="province-Update" class="info-detail"></div>
+                                            <h6>CMND</h6>
+                                            <div class="info-detail" id="personal_code-Update"
+                                                 th:text="${user.personal_code}"></div>
+                                            <h6>Cửa hàng</h6>
+                                            <div th:switch="${user.shop}">
+                                                <div th:case="null" class="info-detail">Không thuộc Cửa hàng nào trong
+                                                    hệ thống
+                                                </div>
+                                                <div th:case="*" class="info-detail"
+                                                     th:text="${user.shop.shop_name}"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <th:block th:switch="${user.email}">
+                                <th:block th:case="${#authentication.name}">
+                                    <div class="row" id="update-user">
+                                        <div class="col-md-4 col-sm-12 text-center" style="height: 52vh;">
+                                            <img th:src="@{${user.user_avatar}}" id="user_avatar" alt="avatar"
+                                                 style="max-width:100%; max-height:100%; object-fit:cover;">
+                                        </div>
+                                        <div class="col-md-8 col-sm-12">
+                                            <div class="row">
+                                                <form id="formUpdateUser" class="col-12">
+                                                    <input type="hidden" id="id" th:value="${user.id}">
+                                                    <div class="col-md-6 col-sm-12">
+                                                        <h6>Tên nhân viên</h6>
+                                                        <input type="text" id="user_fullname" class="form-control"
+                                                               th:value="${user.user_fullname}">
+                                                        <h6 class="mt-1">Số điện thoại</h6>
+                                                        <input type="text" id="user_phone" class="form-control"
+                                                               th:value="${user.user_phone}">
+                                                        <h6 class="mt-1">Địa chỉ</h6>
+                                                        <input type="text" id="user_address" class="form-control"
+                                                               th:value="${user.user_address}">
+                                                        <h6 class="mt-1">Giới tính</h6>
+                                                        <select name="user_gender" id="user_gender" class="form-control"
+                                                                th:value="${user.user_gender}">
+                                                            <option value="">Chọn giới tính</option>
+                                                            <option value="Nam">Nam</option>
+                                                            <option value="Nữ">Nữ</option>
+                                                            <option value="Khác">Khác</option>
+                                                        </select>
+                                                        <h6 class="mt-1">Chức vụ</h6>
+                                                        <th:block th:switch="${user.role}">
+                                                            <th:block th:case="'ADMIN'">
+                                                                <input type="text" name="role" class="form-control"
+                                                                       value="Quản trị website" disabled>
+                                                            </th:block>
+                                                            <th:block th:case="'SHOP_OWNER'">
+                                                                <input type="text" name="role" class="form-control"
+                                                                       value="Chủ cửa hàng" disabled>
+                                                            </th:block>
+                                                            <th:block th:case="'EMPLOYEE'">
+                                                                <input type="text" name="role" class="form-control"
+                                                                       value="Nhân viên" disabled>
+                                                            </th:block>
+                                                        </th:block>
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-12">
+                                                        <h6>Email</h6>
+                                                        <input type="text" id="email" class="form-control"
+                                                               th:value="${user.email}" disabled>
+                                                        <h6 class="mt-1">Tỉnh thành</h6>
+                                                        <th:block th:if="${user.province}">
+                                                            <select name="province" id="province" class="form-control"
+                                                                    th:value="${user.province.id}">
+                                                            </select>
+                                                        </th:block>
+                                                        <th:block th:unless="${user.province}">
+                                                            <select name="province" id="province"
+                                                                    class="form-control">
+                                                            </select>
+                                                        </th:block>
+                                                        <h6 class="mt-1">CMND</h6>
+                                                        <input type="text" id="personal_code" class="form-control"
+                                                               th:value="${user.personal_code}">
+                                                        <h6 class="mt-1">Cửa hàng</h6>
+                                                        <input type="text" name="shop" class="form-control"
+                                                               value="Không thuộc cửa hàng nào" disabled>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-12 text-center" id="btn-update">
+                                            <button onclick="updateUser()" class="btn btn-sm btn-success">Chỉnh sửa
+                                                thông tin
+                                            </button>
+                                        </div>
+                                        <div class="col-4 text-center" id="btn-upload">
+                                            <form th:name="formUpload" enctype="multipart/form-data">
+                                                <input type="file" name="file" id="avatar" style="width: 70px; overflow:hidden; ">
+                                            </form>
+                                        </div>
+                                        <div class="col-4 text-right" id="btn-cancel">
+                                            <button onclick="infoUser()" class="btn btn-sm btn-outline-danger">Hủy chỉnh
+                                                sửa
+                                            </button>
+                                        </div>
+                                        <div class="col-4 text-left" id="btn-confirm">
+                                            <button onclick="confirmUpdate()" class="btn btn-sm btn-outline-success">Xác
+                                                nhận
+                                            </button>
+                                        </div>
+                                    </div>
+                                </th:block>
+                                <th:block th:case="*"></th:block>
+                            </th:block>
+                        </div>
+                    </div>
+                    <th:block th:switch="${user.email}">
+                        <th:block th:case="${#authentication.name}">
+                            <div class="title-div mb-3">
+                                Đổi mật khẩu
+                            </div>
+                            <div class="row changePass">
+                                <div class="col-4"></div>
+                                <div class="col-4">
+                                    <div id="errormsg" class="text-danger" style="display:none;"></div>
+                                    <div id="succmsg" class="text-success" style="display:none;"></div>
+                                    <label>Mật khẩu cũ</label>
+                                    <input type="password" id="passwordOld" class="form-control mb-3">
+                                </div>
+                                <div class="col-4"></div>
+                                <div class="col-4"></div>
+                                <div class="col-4">
+                                    <label>Mật khẩu mới</label>
+                                    <input type="password" id="passwordNew" class="form-control mb-1">
+                                    <label>Xác nhận mật khẩu</label>
+                                    <input type="password" id="passwordConfirm" class="form-control mb-1">
+                                    <span id="error" class="text-danger"
+                                          style="display:none">Mật khẩu xác nhận không trùng</span>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <button type="reset" onclick="resetFormPass()"
+                                                    class="btn btn-sm btn-outline-danger">Nhập lại
+                                            </button>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <button type="button" onclick="userDetails.changePassword()"
+                                                    class="btn btn-sm btn-outline-success">Xác nhận
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4"></div>
+                            </div>
+                        </th:block>
+                        <div th:case="*"></div>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer th:replace="admin/layout::footer"></footer>
+</div>
+<div th:insert="admin/layout::block-script">
+
+</div>
+</div>
+</body>
+</html>
