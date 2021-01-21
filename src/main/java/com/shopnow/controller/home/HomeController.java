@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.File;
+import java.net.URISyntaxException;
+
 @Controller
 @RequestMapping(value = "/")
 public class HomeController {
@@ -24,7 +27,9 @@ public class HomeController {
     LineOfBusinessService lineOfBusinessService;
 
     @GetMapping
-    public ModelAndView index(){
+    public ModelAndView index() throws URISyntaxException {
+        System.out.println("duong dan file: " + new File(HomeController.class.getProtectionDomain().getCodeSource().getLocation()
+                .toURI()).getPath());
         WebInfo webInfo=webInfoService.findById(1L);
         ModelAndView modelAndView = new ModelAndView("fe/home/index","webInfo", webInfo);
         modelAndView.addObject("provinces", provinceService.findAll());
