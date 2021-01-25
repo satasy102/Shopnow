@@ -18,7 +18,7 @@ shops.register = function () {
         lob.id = $('#lob').val();
         shopObj.lineOfBusiness = lob;
         var addShop = $.ajax({
-            url: "http://localhost:8080/api/admin/shop",
+            url: "/api/admin/shop",
             method: "POST",
             dataType: "json",
             contentType: "application/json",
