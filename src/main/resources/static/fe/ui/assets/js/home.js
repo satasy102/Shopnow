@@ -20,7 +20,7 @@ shops.register = function () {
         var addShop = $.ajax({
             url: "/api/admin/shop",
             method: "POST",
-            dataType: "json",
+            dataType: "jsonp",
             contentType: "application/json",
             data: JSON.stringify(shopObj)
         });

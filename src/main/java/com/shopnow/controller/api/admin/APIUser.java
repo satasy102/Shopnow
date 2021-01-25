@@ -19,6 +19,8 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api/admin/user")
 public class APIUser {
+
+
     @Autowired
     UserService userService;
     @Autowired
@@ -30,6 +32,7 @@ public class APIUser {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    @CrossOrigin(origins = "https://shopnowhue.herokuapp.com/")
     @PostMapping
     public ResponseEntity<User> saveUserByShop(@RequestBody User user) {
         User userCheck = userService.findByEmail(user.getEmail());
