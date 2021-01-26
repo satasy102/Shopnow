@@ -234,8 +234,8 @@ webInfos.initValidation = function () {
         rules: {
             hotline: {
                 required: true,
-                maxlength: 15,
-                minlength: 10
+                maxlength: 17,
+                minlength: 8
             },
             email: {
                 required: true,
@@ -272,8 +272,8 @@ webInfos.initValidation = function () {
         messages: {
             hotline: {
                 required: "Vui lòng nhập hotline!",
-                maxlength: "Vui lòng nhập từ 10-15 ký tự",
-                minlength: "Vui lòng nhập từ 10-15 ký tự"
+                maxlength: "Vui lòng nhập từ 8-17 ký tự",
+                minlength: "Vui lòng nhập từ 8-17 ký tự"
             },
             email: {
                 required: "Vui lòng nhập email",

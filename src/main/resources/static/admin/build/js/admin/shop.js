@@ -121,12 +121,7 @@ shops.save = function () {
                 data: JSON.stringify(shopObj)
             });
             addShop.done(function (data) {
-                $('#modalAddEdit').modal('hide');
-                $("#datatables").DataTable().ajax.reload();
-                toastr.info('Thêm Cửa hàng thành công', 'INFORMATION:')
-                setTimeout(() => {
-                    shops.addUser(data.id)
-                }, 500);
+                shops.addUser(data.id);
             });
             addShop.fail(function (xhr) {
                 if (xhr.status == 404) {
@@ -156,6 +151,7 @@ shops.addUser = function (idShop) {
         data: JSON.stringify(user)
     });
     addUser.done(function () {
+        $('#modalAddEdit').modal('hide');
         $("#datatables").DataTable().ajax.reload();
         toastr.info('Thêm Tài khoản thành công', 'INFORMATION:')
     });
