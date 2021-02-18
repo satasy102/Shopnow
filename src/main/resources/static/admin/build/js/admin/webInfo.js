@@ -87,7 +87,7 @@ webInfos.upload= function (field,idForm) {
             toastr.info('Thêm ảnh thành công', 'INFORMATION:')
         }).fail(function () {
         $('.modal').modal('hide');
-        toastr.error('Thêm không thành công', 'INFORMATION:')
+        toastr.error('Thêm ảnh không thành công', 'INFORMATION:')
 
     });
 }
