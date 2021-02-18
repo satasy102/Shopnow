@@ -16,7 +16,7 @@ public class FileUploadService {
         return name_file;
     }
     public static String uploadLogo1(MultipartFile file) throws IllegalStateException, IOException {
-        File directory = new File("./resources/static/fe/ui/assets/images");
+        File directory = new File("./main/resources/static/fe/ui/assets/images");
         String name_file="logo.svg";
         file.transferTo(new File(directory.getCanonicalPath()+"/" +name_file ));
         return "/fe/ui/assets/images/"+name_file;
