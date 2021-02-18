@@ -51,9 +51,10 @@ public class APIWebInfo {
     @PostMapping(value = "/logo1")
     public ResponseEntity<String> uploadLogo1(@RequestParam("file") MultipartFile file, @RequestParam  Long id ) throws IllegalStateException, IOException {
         WebInfo webInfo=webInfoService.findById(id);
-        webInfo.setLogo1(FileUploadService.uploadLogo1(file));
+        String src = FileUploadService.uploadLogo1(file);
+        webInfo.setLogo1(src);
         webInfoService.save(webInfo);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(src,HttpStatus.OK);
     }
 
     @PostMapping(value = "/logo2")

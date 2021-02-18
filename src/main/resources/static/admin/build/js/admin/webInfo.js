@@ -81,7 +81,8 @@ webInfos.upload= function (field,idForm) {
         contentType: false,
         cache: false,
     })
-        .done(function () {
+        .done(function (data) {
+            console.log(data);
             $('.modal').modal('hide');
             toastr.info('Thêm ảnh thành công', 'INFORMATION:')
         }).fail(function () {
